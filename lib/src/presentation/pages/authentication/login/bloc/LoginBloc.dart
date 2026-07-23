@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rapidito/src/data/dataSource/remote/service/AuthService.dart';
+import 'package:rapidito/src/domain/useCases/auth/AuthUseCases.dart';
+import 'package:rapidito/src/domain/useCases/auth/LoginUseCase.dart';
+import 'package:rapidito/src/domain/utils/Resource.dart';
+import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginEvent.dart';
+import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginState.dart';
+import 'package:rapidito/src/presentation/utils/BlocFormItem.dart';
+
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  AuthUseCases authUseCases;
+  final formkey = GlobalKey<FormState>();
+
+  LoginBloc({required this.authUseCases}) : super(LoginState()) {
+    on<LoginInitEvent>((event, emit) {
+      emit(state.copyWith(formkey: formkey));
+      // TODO: implement event handler
+    });
+
+    on<EmailChanged>((event, emit) {
+      emit(
+        state.copyWith(
+          email: BlocformItem(
+            value: event.email.value,
+            error: event.email.value.isEmpty ? 'ingresa el correo' : null,
+          ),
+          formkey: formkey,
+        ),
+      );
+      // TODO: implement event handler
+    });
+
+    on<PasswordChanged>((event, emit) {
+      emit(
+        state.copyWith(
+          password: BlocformItem(
+            value: event.password.value,
+            error: event.password.value.isEmpty
+                ? 'ingresa la constraseña'
+                : event.password.value.length < 6
+                ? 'Minimo 6 caracteres'
+                : null,
+          ),
+        ),
+      );
+    });
+
+    on<FormSubmit>((event, emit) async {
+      print('Correo: ${state.email.value}');
+      print('Password: ${state.password.value}');
+      emit(state.copyWith(response: Loading(), formkey: formkey));
+      Resource response = await authUseCases.login.run(
+        state.email.value,
+        state.password.value,
+      );
+      emit(state.copyWith(response: response, formkey: formkey));
+      // TODO: implement event handler
+    });
+  }
+}
