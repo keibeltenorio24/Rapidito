@@ -1,3 +1,4 @@
+import 'package:rapidito/src/domain/models/AuthResponse.dart';
 import 'package:rapidito/src/presentation/utils/BlocFormItem.dart';
 
 abstract class RegisterEvent {}
@@ -32,6 +33,11 @@ class PasswordChanged extends RegisterInitEvent {
 class ConfirmPasswordChanged extends RegisterInitEvent {
   final BlocformItem confirmPassword;
   ConfirmPasswordChanged({required this.confirmPassword});
+}
+
+class SaveUserSession extends RegisterInitEvent {
+  final AuthResponse authResponse;
+  SaveUserSession({required this.authResponse});
 }
 
 class FormSubmit extends RegisterInitEvent {}

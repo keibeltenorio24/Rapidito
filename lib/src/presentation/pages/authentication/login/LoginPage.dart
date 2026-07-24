@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rapidito/src/domain/models/AuthResponse.dart';
 import 'package:rapidito/src/domain/utils/Resource.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/LoginContent.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginBloc.dart';
+import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginEvent.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginState.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<LoginBloc, LoginState>(
-        // 👇 Esto previene que el Toast se repita al escribir en los TextFields
         listenWhen: (previous, current) =>
             previous.response != current.response,
         listener: (context, state) {
@@ -44,6 +45,15 @@ class _LoginPageState extends State<LoginPage> {
               backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 14.0,
+            );
+            final authResponse = response.data as AuthResponse;
+            context.read<LoginBloc>().add(
+              SaveUserSession(authResponse: authResponse),
+            );
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/client/home',
+              (route) => false,
             );
           }
         },

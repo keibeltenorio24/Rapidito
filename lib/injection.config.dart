@@ -11,6 +11,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:rapidito/src/data/dataSource/local/SharefPref.dart' as _i861;
 import 'package:rapidito/src/data/dataSource/remote/service/AuthService.dart'
     as _i331;
 import 'package:rapidito/src/di/AppModule.dart' as _i885;
@@ -25,6 +26,7 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final appModule = _$AppModule();
+    gh.factory<_i861.SharefPref>(() => appModule.sharefPref);
     gh.factory<_i331.AuthService>(() => appModule.authService);
     gh.factory<_i656.AuthRepository>(() => appModule.authRepository);
     gh.factory<_i848.AuthUseCases>(() => appModule.authUseCases);

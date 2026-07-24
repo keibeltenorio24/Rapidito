@@ -6,16 +6,26 @@ import 'package:rapidito/src/domain/useCases/auth/LoginUseCase.dart';
 import 'package:rapidito/src/domain/utils/Resource.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginEvent.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginState.dart';
+import 'package:rapidito/src/domain/models/AuthResponse.dart';
 import 'package:rapidito/src/presentation/utils/BlocFormItem.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   AuthUseCases authUseCases;
   final formkey = GlobalKey<FormState>();
 
-  LoginBloc({required this.authUseCases}) : super(LoginState()) {
-    on<LoginInitEvent>((event, emit) {
+  LoginBloc({required this.authUseCases}) : super(const LoginState()) {
+    on<LoginInitEvent>((event, emit) async {
       emit(state.copyWith(formkey: formkey));
-      // TODO: implement event handler
+      final authResponse = await authUseCases.getUserSession.run();
+      if (authResponse != null) {
+        emit(
+          state.copyWith(response: Success<AuthResponse>(data: authResponse)),
+        );
+      }
+    });
+
+    on<SaveUserSession>((event, emit) async {
+      await authUseCases.saveUserSession.run(event.authResponse);
     });
 
     on<EmailChanged>((event, emit) {

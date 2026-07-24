@@ -20,6 +20,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       );
     });
 
+    on<SaveUserSession>((event, emit) async {
+      await authUseCases.saveUserSession.run(event.authResponse);
+    });
+
     on<LastNameChanged>((event, emit) {
       emit(
         state.copyWith(
