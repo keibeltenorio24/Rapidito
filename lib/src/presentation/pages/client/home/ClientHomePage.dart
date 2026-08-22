@@ -5,6 +5,7 @@ import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeBloc.
 import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeEvent.dart';
 import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeState.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/ProfileInfoPage.dart';
+import 'package:rapidito/src/presentation/pages/client/mapSeeker/ClientMapSeekerPage.dart';
 
 class ClientHomePage extends StatefulWidget {
   const ClientHomePage({super.key});
@@ -14,11 +15,20 @@ class ClientHomePage extends StatefulWidget {
 }
 
 class ClientHomePageState extends State<ClientHomePage> {
-  List<Widget> pageList = <Widget>[
-    const Center(child: Text("Mapa de Viajes")),
-    const Center(child: Text("Historial de Viajes")),
-    const ProfileInfoPage(),
-  ];
+  bool _isMapReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Wait 1.5 seconds for route transition + native surface to be ready
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        setState(() {
+          _isMapReady = true;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +36,16 @@ class ClientHomePageState extends State<ClientHomePage> {
       appBar: AppBar(title: const Text('Rapidito')),
       body: BlocBuilder<ClientHomeBloc, ClientHomeState>(
         builder: (context, state) {
-          return pageList[state.pageIndex];
+          return IndexedStack(
+            index: state.pageIndex,
+            children: [
+              _isMapReady
+                  ? ClientMapSeekerPage()
+                  : const Center(child: CircularProgressIndicator()),
+              const Center(child: Text("Historial de Viajes")),
+              const ProfileInfoPage(),
+            ],
+          );
         },
       ),
       drawer: BlocBuilder<ClientHomeBloc, ClientHomeState>(

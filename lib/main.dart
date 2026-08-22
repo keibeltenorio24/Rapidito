@@ -5,6 +5,7 @@ import 'package:rapidito/injection.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/LoginPage.dart';
 import 'package:rapidito/src/presentation/pages/authentication/register/RegisterPage.dart';
 import 'package:rapidito/src/presentation/pages/client/home/ClientHomePage.dart';
+import 'package:rapidito/src/presentation/pages/profile/update/profileUpdatePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,8 @@ class MyApp extends StatelessWidget {
           '/login': (BuildContext context) => const LoginPage(),
           '/register': (BuildContext context) => const RegisterPage(),
           '/client/home': (BuildContext context) => const ClientHomePage(),
+          '/profile/update': (BuildContext context) =>
+              const ProfileUpdatePage(),
         },
         //home: LoginPage(),
       ),

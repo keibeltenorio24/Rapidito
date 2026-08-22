@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           } else if (response is Success) {
             Fluttertoast.showToast(
-              msg: '¡Login exitoso!',
+              msg: '¡Inicio exitoso!',
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,

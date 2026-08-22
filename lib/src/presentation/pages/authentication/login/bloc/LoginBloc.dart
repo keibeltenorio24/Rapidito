@@ -56,6 +56,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
     });
 
+    on<ResetLoginForm>((event, emit) {
+      emit(const LoginState());
+    });
+
     on<FormSubmit>((event, emit) async {
       print('Correo: ${state.email.value}');
       print('Password: ${state.password.value}');

@@ -39,6 +39,9 @@ dependencies:
   injectable: ^3.0.0
   get_it: ^9.2.1
   shared_preferences: ^2.5.5
+  google_maps_flutter: ^2.18.0
+  image_picker: ^1.2.3
+  geolocator: ^14.0.3
 
   
 
