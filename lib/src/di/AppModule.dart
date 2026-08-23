@@ -14,8 +14,10 @@ import 'package:rapidito/src/domain/useCases/auth/LoginUseCase.dart';
 import 'package:rapidito/src/domain/useCases/auth/RegisterUseCase.dart';
 import 'package:rapidito/src/domain/useCases/auth/SaveUserSessionUseCase.dart';
 import 'package:rapidito/src/domain/useCases/auth/RemoveUserSessionUseCase.dart';
+import 'package:rapidito/src/domain/useCases/geolocator/CreateMarkerUseCase.dart';
 import 'package:rapidito/src/domain/useCases/geolocator/FindPositionUseCase.dart';
 import 'package:rapidito/src/domain/useCases/geolocator/GeolocatorUseCases.dart';
+import 'package:rapidito/src/domain/useCases/geolocator/GetMarkerUseCase.dart';
 import 'package:rapidito/src/domain/useCases/users/UpdateUserUseCase.dart';
 import 'package:rapidito/src/domain/useCases/users/UsersUseCases.dart';
 
@@ -58,5 +60,9 @@ abstract class AppModule {
     findPosition: FindPositionUseCase(
       geolocatorRepository: geolocatorRepository,
     ),
+    createMarker: CreateMarkerUseCase(
+      geolocatorRepository: geolocatorRepository,
+    ),
+    getMarker: GetMarkerUseCase(geolocatorRepository: geolocatorRepository),
   );
 }

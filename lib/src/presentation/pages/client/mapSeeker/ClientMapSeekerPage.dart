@@ -68,7 +68,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
                         context.read<ClientMapSeekerBloc>().add(FindPosition());
                       },
                       child: const Text('Reintentar / Dar Permisos'),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -78,12 +78,17 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
             }
             return GoogleMap(
               mapType: MapType.normal,
+              markers: state.marker != null ? {state.marker!} : {},
               initialCameraPosition: CameraPosition(
-                target: LatLng(state.position!.latitude, state.position!.longitude),
+                target: LatLng(
+                  state.position!.latitude,
+                  state.position!.longitude,
+                ),
                 zoom: 16,
               ),
               onMapCreated: (GoogleMapController controller) {
-                if (state.controller != null && !state.controller!.isCompleted) {
+                if (state.controller != null &&
+                    !state.controller!.isCompleted) {
                   state.controller!.complete(controller);
                 }
               },

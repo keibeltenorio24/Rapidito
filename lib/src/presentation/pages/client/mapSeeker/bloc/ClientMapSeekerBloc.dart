@@ -20,7 +20,22 @@ class ClientMapSeekerBloc
     on<FindPosition>((event, emit) async {
       try {
         Position position = await geolocatorUseCases.findPosition.run();
-        emit(state.copyWith(position: position, error: null));
+
+        // Crear el icono del marcador
+        BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker
+            .run('assets/img/location_blue.png');
+
+        // Configurar el marcador
+        Marker marker = geolocatorUseCases.getMarker.run(
+          'my_location',
+          position.latitude,
+          position.longitude,
+          'Mi ubicación',
+          '',
+          imageMarker,
+        );
+
+        emit(state.copyWith(position: position, marker: marker, error: null));
         print('position ${position.latitude}');
         print('position ${position.longitude}');
       } catch (e) {
