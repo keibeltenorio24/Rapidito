@@ -12,3 +12,13 @@ class ChangeMapCameraPosition extends ClientMapSeekerEvent {
   final double longitude;
   ChangeMapCameraPosition({required this.latitude, required this.longitude});
 }
+
+class OnSearchPlace extends ClientMapSeekerEvent {
+  final String query;
+  OnSearchPlace({required this.query});
+}
+
+class OnSelectPlace extends ClientMapSeekerEvent {
+  final String placeId;
+  OnSelectPlace({required this.placeId});
+}
