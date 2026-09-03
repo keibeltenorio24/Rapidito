@@ -18,6 +18,7 @@ import 'package:rapidito/src/domain/useCases/geolocator/CreateMarkerUseCase.dart
 import 'package:rapidito/src/domain/useCases/geolocator/FindPositionUseCase.dart';
 import 'package:rapidito/src/domain/useCases/geolocator/GeolocatorUseCases.dart';
 import 'package:rapidito/src/domain/useCases/geolocator/GetMarkerUseCase.dart';
+import 'package:rapidito/src/domain/useCases/geolocator/GetPolylineUseCase.dart';
 import 'package:rapidito/src/domain/useCases/users/UpdateUserUseCase.dart';
 import 'package:rapidito/src/domain/useCases/users/UsersUseCases.dart';
 
@@ -64,5 +65,6 @@ abstract class AppModule {
       geolocatorRepository: geolocatorRepository,
     ),
     getMarker: GetMarkerUseCase(geolocatorRepository: geolocatorRepository),
+    getPolyline: GetPolylineUseCase(geolocatorRepository: geolocatorRepository),
   );
 }

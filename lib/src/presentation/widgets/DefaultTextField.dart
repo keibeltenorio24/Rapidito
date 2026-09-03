@@ -13,6 +13,9 @@ class DefaultTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? errorText;
   final Color backgroundColor;
+  final bool hasBorders;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
 
   const DefaultTextField({
     super.key,
@@ -27,6 +30,9 @@ class DefaultTextField extends StatefulWidget {
     this.inputFormatters,
     this.errorText,
     this.backgroundColor = Colors.white,
+    this.hasBorders = true,
+    this.controller,
+    this.focusNode,
   });
 
   @override
@@ -39,6 +45,8 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
+      focusNode: widget.focusNode,
       initialValue: widget.initialValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: widget.keyboardType,
@@ -70,22 +78,30 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                 },
               )
             : null,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.black54),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.black),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.red),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.red),
-        ),
+        enabledBorder: widget.hasBorders
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black54),
+              )
+            : InputBorder.none,
+        focusedBorder: widget.hasBorders
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              )
+            : InputBorder.none,
+        errorBorder: widget.hasBorders
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.red),
+              )
+            : InputBorder.none,
+        focusedErrorBorder: widget.hasBorders
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.red),
+              )
+            : InputBorder.none,
       ),
     );
   }

@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/bitmap.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/marker.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:rapidito/src/domain/repository/GeolocatorRepository.dart';
+import 'package:rapidito/src/domain/models/DirectionData.dart';
 
 class GeolocatorRepositoryImpl implements GeolocatorRepository {
   @override
@@ -75,5 +79,52 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
       infoWindow: InfoWindow(title: title, snippet: content),
     );
     return marker;
+  }
+
+  @override
+  Future<DirectionData> getPolyline(LatLng origin, LatLng destination) async {
+    String googleApiKey = 'AIzaSyBHJifu14P0CTs6cflg9B6ikOLCRfxOv_k';
+
+    final url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$googleApiKey',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+
+      if (jsonResponse['status'] == 'OK') {
+        final route = jsonResponse['routes'][0];
+        final leg = route['legs'][0];
+
+        final distanceText = leg['distance']['text'];
+        final distanceValue = leg['distance']['value'].toDouble();
+
+        final durationText = leg['duration']['text'];
+        final durationValue = leg['duration']['value'];
+
+        final encodedPolyline = route['overview_polyline']['points'];
+
+        List<PointLatLng> decodedPoints = PolylinePoints.decodePolyline(
+          encodedPolyline,
+        );
+        List<LatLng> polylineCoordinates = decodedPoints
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList();
+
+        return DirectionData(
+          polylineCoordinates: polylineCoordinates,
+          distanceText: distanceText,
+          distanceValue: distanceValue,
+          durationText: durationText,
+          durationValue: durationValue,
+        );
+      } else {
+        throw Exception('Directions API error: ${jsonResponse['status']}');
+      }
+    } else {
+      throw Exception('Failed to fetch directions');
+    }
   }
 }
