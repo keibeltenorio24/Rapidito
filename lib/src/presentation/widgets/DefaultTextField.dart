@@ -16,6 +16,7 @@ class DefaultTextField extends StatefulWidget {
   final bool hasBorders;
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final Widget? suffixIcon;
 
   const DefaultTextField({
     super.key,
@@ -33,6 +34,7 @@ class DefaultTextField extends StatefulWidget {
     this.hasBorders = true,
     this.controller,
     this.focusNode,
+    this.suffixIcon,
   });
 
   @override
@@ -77,7 +79,7 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                   });
                 },
               )
-            : null,
+            : widget.suffixIcon,
         enabledBorder: widget.hasBorders
             ? OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),

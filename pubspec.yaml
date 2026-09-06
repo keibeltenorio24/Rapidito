@@ -45,7 +45,8 @@ dependencies:
   google_places_autocomplete: ^2.1.2
   geocoding: ^5.0.0
   flutter_polyline_points: ^3.1.0
-  
+  firebase_core: ^3.3.0
+  cloud_firestore: ^5.2.1
 
   
 

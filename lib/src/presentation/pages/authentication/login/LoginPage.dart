@@ -7,6 +7,7 @@ import 'package:rapidito/src/presentation/pages/authentication/login/LoginConten
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginBloc.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginEvent.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginState.dart';
+import 'package:rapidito/src/presentation/pages/roles/RolesPage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,11 +51,23 @@ class _LoginPageState extends State<LoginPage> {
             context.read<LoginBloc>().add(
               SaveUserSession(authResponse: authResponse),
             );
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/client/home',
-              (route) => false,
-            );
+            
+            if (authResponse.user.roles != null && authResponse.user.roles!.length > 1) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RolesPage(roles: authResponse.user.roles!),
+                ),
+                (route) => false,
+              );
+            } else {
+              final String route = authResponse.user.roles?.first.route ?? 'client/home';
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/$route',
+                (route) => false,
+              );
+            }
           }
         },
         child: BlocBuilder<LoginBloc, LoginState>(

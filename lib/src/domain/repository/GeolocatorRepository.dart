@@ -14,4 +14,5 @@ abstract class GeolocatorRepository {
     BitmapDescriptor imageMarker,
   );
   Future<DirectionData> getPolyline(LatLng origin, LatLng destination);
+  Stream<Position> getPositionStream();
 }

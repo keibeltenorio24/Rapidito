@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapidito/blocProviders.dart';
 import 'package:rapidito/injection.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:rapidito/firebase_options.dart';
 import 'package:rapidito/src/presentation/pages/authentication/login/LoginPage.dart';
 import 'package:rapidito/src/presentation/pages/authentication/register/RegisterPage.dart';
 import 'package:rapidito/src/presentation/pages/client/home/ClientHomePage.dart';
+import 'package:rapidito/src/presentation/pages/driver/home/DriverHomePage.dart';
 import 'package:rapidito/src/presentation/pages/profile/update/profileUpdatePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await configureDependencies();
   runApp(const MyApp());
 }
@@ -16,7 +20,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -34,10 +37,10 @@ class MyApp extends StatelessWidget {
           '/login': (BuildContext context) => const LoginPage(),
           '/register': (BuildContext context) => const RegisterPage(),
           '/client/home': (BuildContext context) => const ClientHomePage(),
+          '/driver/home': (BuildContext context) => const DriverHomePage(),
           '/profile/update': (BuildContext context) =>
               const ProfileUpdatePage(),
         },
-        //home: LoginPage(),
       ),
     );
   }

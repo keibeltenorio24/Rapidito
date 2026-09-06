@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "609632342920",
+    "project_id": "rapidito-12a67",
+    "storage_bucket": "rapidito-12a67.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609632342920:android:ba74d30ea06661a952e03d",
+        "android_client_info": {
+          "package_name": "com.example.rapidito"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYyL2aAFz8NWyhl229Nh6fb9nHPOLo_qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

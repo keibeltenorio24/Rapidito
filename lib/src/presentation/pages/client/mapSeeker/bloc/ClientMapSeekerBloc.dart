@@ -12,16 +12,19 @@ import 'package:rapidito/src/domain/useCases/geolocator/GeolocatorUseCases.dart'
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapSeekerEvent.dart';
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapSeekerState.dart';
 
+import 'package:rapidito/src/domain/useCases/rides/RidesUseCases.dart';
+
 class ClientMapSeekerBloc
     extends Bloc<ClientMapSeekerEvent, ClientMapSeekerState> {
   final GeolocatorUseCases geolocatorUseCases;
+  final RidesUseCases ridesUseCases;
   final Geocoding geocoding = Geocoding();
   final String _googleApiKey = 'AIzaSyBHJifu14P0CTs6cflg9B6ikOLCRfxOv_k';
 
-  ClientMapSeekerBloc({required this.geolocatorUseCases})
+  ClientMapSeekerBloc({required this.geolocatorUseCases, required this.ridesUseCases})
     : super(ClientMapSeekerState()) {
     on<ClientMapSeekerInitEvent>((event, emit) async {
-      emit(state.copyWith(controller: Completer<GoogleMapController>()));
+      emit(ClientMapSeekerState(controller: Completer<GoogleMapController>()));
     });
     on<FindPosition>((event, emit) async {
       try {
@@ -339,6 +342,17 @@ class ClientMapSeekerBloc
 
     on<OnCancelRoute>((event, emit) {
       emit(state.copyWith(polylines: const {}));
+    });
+
+    on<OnCreateRideRequest>((event, emit) async {
+      emit(state.copyWith(isRequesting: true));
+      try {
+        String requestId = await ridesUseCases.createRideRequest.run(event.rideRequest);
+        emit(state.copyWith(isRequesting: false, rideRequestId: requestId));
+      } catch (e) {
+        print('Error creating ride request in firebase: $e');
+        emit(state.copyWith(isRequesting: false));
+      }
     });
   }
 }

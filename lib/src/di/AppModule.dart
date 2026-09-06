@@ -19,8 +19,16 @@ import 'package:rapidito/src/domain/useCases/geolocator/FindPositionUseCase.dart
 import 'package:rapidito/src/domain/useCases/geolocator/GeolocatorUseCases.dart';
 import 'package:rapidito/src/domain/useCases/geolocator/GetMarkerUseCase.dart';
 import 'package:rapidito/src/domain/useCases/geolocator/GetPolylineUseCase.dart';
+import 'package:rapidito/src/domain/useCases/geolocator/GetPositionStreamUseCase.dart';
 import 'package:rapidito/src/domain/useCases/users/UpdateUserUseCase.dart';
 import 'package:rapidito/src/domain/useCases/users/UsersUseCases.dart';
+
+import 'package:rapidito/src/data/repository/FirebaseRideRequestRepositoryImpl.dart';
+import 'package:rapidito/src/domain/repository/RideRequestRepository.dart';
+import 'package:rapidito/src/domain/useCases/rides/CreateRideRequestUseCase.dart';
+import 'package:rapidito/src/domain/useCases/rides/ListenRideRequestsUseCase.dart';
+import 'package:rapidito/src/domain/useCases/rides/UpdateRideRequestStatusUseCase.dart';
+import 'package:rapidito/src/domain/useCases/rides/RidesUseCases.dart';
 
 @module
 abstract class AppModule {
@@ -42,6 +50,9 @@ abstract class AppModule {
 
   @injectable
   GeolocatorRepository get geolocatorRepository => GeolocatorRepositoryImpl();
+
+  @injectable
+  RideRequestRepository get rideRequestRepository => FirebaseRideRequestRepositoryImpl();
 
   @injectable
   AuthUseCases get authUseCases => AuthUseCases(
@@ -66,5 +77,13 @@ abstract class AppModule {
     ),
     getMarker: GetMarkerUseCase(geolocatorRepository: geolocatorRepository),
     getPolyline: GetPolylineUseCase(geolocatorRepository: geolocatorRepository),
+    getPositionStream: GetPositionStreamUseCase(geolocatorRepository: geolocatorRepository),
+  );
+
+  @injectable
+  RidesUseCases get ridesUseCases => RidesUseCases(
+    createRideRequest: CreateRideRequestUseCase(rideRequestRepository),
+    listenRideRequests: ListenRideRequestsUseCase(rideRequestRepository),
+    updateRideRequestStatus: UpdateRideRequestStatusUseCase(rideRequestRepository),
   );
 }

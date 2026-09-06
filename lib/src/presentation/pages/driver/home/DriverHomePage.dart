@@ -1,58 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rapidito/src/presentation/pages/authentication/login/bloc/LoginBloc.dart';
-import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeBloc.dart';
-import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeEvent.dart';
-import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeState.dart';
+import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeBloc.dart';
+import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeEvent.dart';
+import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeState.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/ProfileInfoPage.dart';
-import 'package:rapidito/src/presentation/pages/client/mapSeeker/ClientMapSeekerPage.dart';
+import 'package:rapidito/src/presentation/pages/driver/map/DriverMapPage.dart';
 
-class ClientHomePage extends StatefulWidget {
-  const ClientHomePage({super.key});
+class DriverHomePage extends StatefulWidget {
+  const DriverHomePage({super.key});
 
   @override
-  State<ClientHomePage> createState() => ClientHomePageState();
+  State<DriverHomePage> createState() => DriverHomePageState();
 }
 
-class ClientHomePageState extends State<ClientHomePage> {
-  bool _isMapReady = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Start on Map page
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ClientHomeBloc>().add(ChangePageEvent(pageIndex: 0));
-    });
-    // Wait 1.5 seconds for route transition + native surface to be ready
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) {
-        setState(() {
-          _isMapReady = true;
-        });
-      }
-    });
-  }
-
+class DriverHomePageState extends State<DriverHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Rapidito')),
-      body: BlocBuilder<ClientHomeBloc, ClientHomeState>(
+      appBar: AppBar(title: const Text('Rapidito Conductor')),
+      body: BlocBuilder<DriverHomeBloc, DriverHomeState>(
         builder: (context, state) {
           return IndexedStack(
             index: state.pageIndex,
             children: [
-              _isMapReady
-                  ? ClientMapSeekerPage()
-                  : const Center(child: CircularProgressIndicator()),
-              const Center(child: Text("Historial de Viajes")),
+              const DriverMapPage(),
+              const Center(child: Text("Historial de Viajes (Conductor)")),
               const ProfileInfoPage(),
             ],
           );
         },
       ),
-      drawer: BlocBuilder<ClientHomeBloc, ClientHomeState>(
+      drawer: BlocBuilder<DriverHomeBloc, DriverHomeState>(
         builder: (context, state) {
           return Drawer(
             child: ListView(
@@ -67,7 +45,7 @@ class ClientHomePageState extends State<ClientHomePage> {
                     ),
                   ),
                   child: const Text(
-                    'Menú',
+                    'Menú Conductor',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -83,25 +61,22 @@ class ClientHomePageState extends State<ClientHomePage> {
                   ),
                   selected: state.pageIndex == 2,
                   onTap: () {
-                    context.read<ClientHomeBloc>().add(
-                      ChangePageEvent(pageIndex: 2),
+                    context.read<DriverHomeBloc>().add(
+                      const ChangeDriverPageEvent(pageIndex: 2),
                     );
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(
-                    Icons.directions_car,
-                    color: Colors.black87,
-                  ),
+                  leading: const Icon(Icons.map, color: Colors.black87),
                   title: const Text(
-                    'Viajar',
+                    'Mapa',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   selected: state.pageIndex == 0,
                   onTap: () {
-                    context.read<ClientHomeBloc>().add(
-                      ChangePageEvent(pageIndex: 0),
+                    context.read<DriverHomeBloc>().add(
+                      const ChangeDriverPageEvent(pageIndex: 0),
                     );
                     Navigator.pop(context); // Cierra el Drawer
                   },
@@ -114,8 +89,8 @@ class ClientHomePageState extends State<ClientHomePage> {
                   ),
                   selected: state.pageIndex == 1,
                   onTap: () {
-                    context.read<ClientHomeBloc>().add(
-                      ChangePageEvent(pageIndex: 1),
+                    context.read<DriverHomeBloc>().add(
+                      const ChangeDriverPageEvent(pageIndex: 1),
                     );
                     Navigator.pop(context);
                   },
@@ -127,7 +102,7 @@ class ClientHomePageState extends State<ClientHomePage> {
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
-                    context.read<ClientHomeBloc>().add(ClientLogoutEvent());
+                    context.read<DriverHomeBloc>().add(DriverLogoutEvent());
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                 ),

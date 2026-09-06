@@ -7,6 +7,8 @@ import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapS
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapSeekerEvent.dart';
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapSeekerState.dart';
 import 'package:rapidito/src/presentation/widgets/DefaultTextField.dart';
+import 'package:rapidito/src/domain/models/RideRequest.dart';
+import 'package:rapidito/src/presentation/pages/client/searchingDriver/ClientSearchingDriverPage.dart';
 
 class ClientMapSeekerPage extends StatefulWidget {
   ClientMapSeekerPage({Key? key}) : super(key: key);
@@ -32,6 +34,9 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
   @override
   void initState() {
     super.initState();
+    _originController.clear();
+    _destinationController.clear();
+    _isOriginActive = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<ClientMapSeekerBloc>().add(ClientMapSeekerInitEvent());
       context.read<ClientMapSeekerBloc>().add(FindPosition());
@@ -62,19 +67,52 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
-        listenWhen: (previous, current) =>
-            (previous.placemarkName != current.placemarkName &&
-            current.placemarkName != null),
-        listener: (context, state) {
-          if (state.placemarkName != null) {
-            if (_isOriginActive) {
-              _originController.text = state.placemarkName!;
-            } else {
-              _destinationController.text = state.placemarkName!;
-            }
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
+            listenWhen: (previous, current) =>
+                previous.placemarkName != current.placemarkName &&
+                current.placemarkName != null,
+            listener: (context, state) {
+              if (state.placemarkName != null) {
+                if (_isOriginActive) {
+                  _originController.text = state.placemarkName!;
+                } else {
+                  _destinationController.text = state.placemarkName!;
+                }
+              }
+            },
+          ),
+          BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
+            listenWhen: (previous, current) =>
+                previous.rideRequestId != current.rideRequestId &&
+                current.rideRequestId != null,
+            listener: (context, state) {
+              if (state.rideRequestId != null) {
+                final rideRequest = RideRequest(
+                  originName: _originController.text.isNotEmpty ? _originController.text : 'Mi Ubicación',
+                  destinationName: _destinationController.text,
+                  originPosition: state.originPosition!,
+                  destinationPosition: state.destinationPosition!,
+                  distanceText: state.distanceText!,
+                  durationText: state.durationText!,
+                  price: state.price!,
+                  polylineCoordinates: state.polylines.values.first.points,
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ClientSearchingDriverPage(
+                      rideRequest: rideRequest,
+                      rideRequestId: state.rideRequestId!, // Pass the ID
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<ClientMapSeekerBloc, ClientMapSeekerState>(
           builder: (context, state) {
             if (state.error != null) {
@@ -183,18 +221,35 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: DefaultTextField(
-                                controller: _originController,
-                                focusNode: _originFocus,
-                                text: 'Lugar de origen',
-                                icon: Icons.location_on,
-                                backgroundColor: Colors.white,
-                                hasBorders: false,
-                                verticalPadding: 5,
-                                onChanged: (text) {
-                                  _isOriginActive = true;
-                                  context.read<ClientMapSeekerBloc>().add(
-                                    OnSearchPlace(query: text),
+                              child: ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: _originController,
+                                builder: (context, value, child) {
+                                  return DefaultTextField(
+                                    controller: _originController,
+                                    focusNode: _originFocus,
+                                    text: 'Lugar de origen',
+                                    icon: Icons.location_on,
+                                    backgroundColor: Colors.white,
+                                    hasBorders: false,
+                                    verticalPadding: 5,
+                                    onChanged: (text) {
+                                      _isOriginActive = true;
+                                      context.read<ClientMapSeekerBloc>().add(
+                                        OnSearchPlace(query: text),
+                                      );
+                                    },
+                                    suffixIcon: value.text.isNotEmpty
+                                        ? IconButton(
+                                            icon: const Icon(Icons.clear, color: Colors.grey),
+                                            onPressed: () {
+                                              _originController.clear();
+                                              _originFocus.requestFocus();
+                                              context.read<ClientMapSeekerBloc>().add(
+                                                OnSearchPlace(query: ''),
+                                              );
+                                            },
+                                          )
+                                        : null,
                                   );
                                 },
                               ),
@@ -202,18 +257,35 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
                             const Divider(height: 1),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: DefaultTextField(
-                                controller: _destinationController,
-                                focusNode: _destinationFocus,
-                                text: 'Destino',
-                                icon: Icons.flag,
-                                backgroundColor: Colors.white,
-                                hasBorders: false,
-                                verticalPadding: 5,
-                                onChanged: (text) {
-                                  _isOriginActive = false;
-                                  context.read<ClientMapSeekerBloc>().add(
-                                    OnSearchPlace(query: text),
+                              child: ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: _destinationController,
+                                builder: (context, value, child) {
+                                  return DefaultTextField(
+                                    controller: _destinationController,
+                                    focusNode: _destinationFocus,
+                                    text: 'Destino',
+                                    icon: Icons.flag,
+                                    backgroundColor: Colors.white,
+                                    hasBorders: false,
+                                    verticalPadding: 5,
+                                    onChanged: (text) {
+                                      _isOriginActive = false;
+                                      context.read<ClientMapSeekerBloc>().add(
+                                        OnSearchPlace(query: text),
+                                      );
+                                    },
+                                    suffixIcon: value.text.isNotEmpty
+                                        ? IconButton(
+                                            icon: const Icon(Icons.clear, color: Colors.grey),
+                                            onPressed: () {
+                                              _destinationController.clear();
+                                              _destinationFocus.requestFocus();
+                                              context.read<ClientMapSeekerBloc>().add(
+                                                OnSearchPlace(query: ''),
+                                              );
+                                            },
+                                          )
+                                        : null,
                                   );
                                 },
                               ),
@@ -399,16 +471,43 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
                                     ),
                                     backgroundColor: Colors.cyan,
                                   ),
-                                  onPressed: () {
-                                    // Todo: Continuar a solicitar viaje
-                                  },
-                                  child: const Text(
-                                    'Solicitar Viaje',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                  onPressed: state.isRequesting 
+                                    ? null 
+                                    : () {
+                                      if (state.distanceText == null ||
+                                          state.durationText == null ||
+                                          state.price == null) {
+                                        return;
+                                      }
+                                      
+                                      final rideRequest = RideRequest(
+                                        originName: _originController.text.isNotEmpty ? _originController.text : 'Mi Ubicación',
+                                        destinationName: _destinationController.text,
+                                        originPosition: state.originPosition!,
+                                        destinationPosition: state.destinationPosition!,
+                                        distanceText: state.distanceText!,
+                                        durationText: state.durationText!,
+                                        price: state.price!,
+                                        polylineCoordinates: state.polylines.values.first.points,
+                                      );
+
+                                      context.read<ClientMapSeekerBloc>().add(
+                                        OnCreateRideRequest(rideRequest: rideRequest)
+                                      );
+                                    },
+                                  child: state.isRequesting 
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                      )
+                                    : const Text(
+                                        'Solicitar Viaje',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                 ),
                               ),
                             ],

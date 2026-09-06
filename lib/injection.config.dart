@@ -25,6 +25,8 @@ import 'package:rapidito/src/domain/useCases/auth/AuthUseCases.dart' as _i848;
 import 'package:rapidito/src/domain/useCases/geolocator/GeolocatorUseCases.dart'
     as _i438;
 import 'package:rapidito/src/domain/useCases/users/UsersUseCases.dart' as _i74;
+import 'package:rapidito/src/domain/repository/RideRequestRepository.dart' as _i998;
+import 'package:rapidito/src/domain/useCases/rides/RidesUseCases.dart' as _i999;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -42,9 +44,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i232.GeolocatorRepository>(
       () => appModule.geolocatorRepository,
     );
+    gh.factory<_i998.RideRequestRepository>(() => appModule.rideRequestRepository);
     gh.factory<_i848.AuthUseCases>(() => appModule.authUseCases);
     gh.factory<_i74.UsersUseCases>(() => appModule.usersUseCases);
     gh.factory<_i438.GeolocatorUseCases>(() => appModule.geolocatorUseCases);
+    gh.factory<_i999.RidesUseCases>(() => appModule.ridesUseCases);
     return this;
   }
 }

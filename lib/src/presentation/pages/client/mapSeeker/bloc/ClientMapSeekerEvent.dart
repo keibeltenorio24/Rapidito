@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rapidito/src/domain/models/RideRequest.dart';
 
 abstract class ClientMapSeekerEvent {}
 
@@ -38,3 +39,8 @@ class OnDrawRoute extends ClientMapSeekerEvent {
 }
 
 class OnCancelRoute extends ClientMapSeekerEvent {}
+
+class OnCreateRideRequest extends ClientMapSeekerEvent {
+  final RideRequest rideRequest;
+  OnCreateRideRequest({required this.rideRequest});
+}

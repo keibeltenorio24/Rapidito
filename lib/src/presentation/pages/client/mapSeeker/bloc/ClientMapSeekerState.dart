@@ -19,6 +19,8 @@ class ClientMapSeekerState extends Equatable {
   final String? distanceText;
   final String? durationText;
   final double? price;
+  final bool isRequesting;
+  final String? rideRequestId;
 
   ClientMapSeekerState({
     this.position,
@@ -36,6 +38,8 @@ class ClientMapSeekerState extends Equatable {
     this.distanceText,
     this.durationText,
     this.price,
+    this.isRequesting = false,
+    this.rideRequestId,
   });
 
   ClientMapSeekerState copyWith({
@@ -54,6 +58,8 @@ class ClientMapSeekerState extends Equatable {
     String? distanceText,
     String? durationText,
     double? price,
+    bool? isRequesting,
+    String? rideRequestId,
   }) {
     return ClientMapSeekerState(
       position: position ?? this.position,
@@ -71,6 +77,8 @@ class ClientMapSeekerState extends Equatable {
       distanceText: distanceText ?? this.distanceText,
       durationText: durationText ?? this.durationText,
       price: price ?? this.price,
+      isRequesting: isRequesting ?? this.isRequesting,
+      rideRequestId: rideRequestId ?? this.rideRequestId,
     );
   }
 
@@ -90,5 +98,7 @@ class ClientMapSeekerState extends Equatable {
     distanceText,
     durationText,
     price,
+    isRequesting,
+    rideRequestId,
   ];
 }

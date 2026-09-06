@@ -127,4 +127,14 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
       throw Exception('Failed to fetch directions');
     }
   }
+
+  @override
+  Stream<Position> getPositionStream() {
+    return Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 1, // update every 1 meter
+      ),
+    );
+  }
 }
