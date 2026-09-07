@@ -28,6 +28,7 @@ import 'package:rapidito/src/domain/repository/RideRequestRepository.dart';
 import 'package:rapidito/src/domain/useCases/rides/CreateRideRequestUseCase.dart';
 import 'package:rapidito/src/domain/useCases/rides/ListenRideRequestsUseCase.dart';
 import 'package:rapidito/src/domain/useCases/rides/UpdateRideRequestStatusUseCase.dart';
+import 'package:rapidito/src/domain/useCases/rides/GetRideRequestStreamUseCase.dart';
 import 'package:rapidito/src/domain/useCases/rides/RidesUseCases.dart';
 
 @module
@@ -52,7 +53,8 @@ abstract class AppModule {
   GeolocatorRepository get geolocatorRepository => GeolocatorRepositoryImpl();
 
   @injectable
-  RideRequestRepository get rideRequestRepository => FirebaseRideRequestRepositoryImpl();
+  RideRequestRepository get rideRequestRepository =>
+      FirebaseRideRequestRepositoryImpl();
 
   @injectable
   AuthUseCases get authUseCases => AuthUseCases(
@@ -77,13 +79,18 @@ abstract class AppModule {
     ),
     getMarker: GetMarkerUseCase(geolocatorRepository: geolocatorRepository),
     getPolyline: GetPolylineUseCase(geolocatorRepository: geolocatorRepository),
-    getPositionStream: GetPositionStreamUseCase(geolocatorRepository: geolocatorRepository),
+    getPositionStream: GetPositionStreamUseCase(
+      geolocatorRepository: geolocatorRepository,
+    ),
   );
 
   @injectable
   RidesUseCases get ridesUseCases => RidesUseCases(
     createRideRequest: CreateRideRequestUseCase(rideRequestRepository),
     listenRideRequests: ListenRideRequestsUseCase(rideRequestRepository),
-    updateRideRequestStatus: UpdateRideRequestStatusUseCase(rideRequestRepository),
+    updateRideRequestStatus: UpdateRideRequestStatusUseCase(
+      rideRequestRepository,
+    ),
+    getRideRequestStream: GetRideRequestStreamUseCase(rideRequestRepository),
   );
 }

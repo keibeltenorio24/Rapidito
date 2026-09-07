@@ -6,6 +6,7 @@ import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeEvent
 import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeState.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/ProfileInfoPage.dart';
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/ClientMapSeekerPage.dart';
+import 'package:rapidito/src/presentation/pages/roles/RolesPage.dart';
 
 class ClientHomePage extends StatefulWidget {
   const ClientHomePage({super.key});
@@ -22,6 +23,7 @@ class ClientHomePageState extends State<ClientHomePage> {
     super.initState();
     // Start on Map page
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ClientHomeBloc>().add(ClientHomeInitEvent());
       context.read<ClientHomeBloc>().add(ChangePageEvent(pageIndex: 0));
     });
     // Wait 1.5 seconds for route transition + native surface to be ready
@@ -120,6 +122,26 @@ class ClientHomePageState extends State<ClientHomePage> {
                     Navigator.pop(context);
                   },
                 ),
+                if (state.roles != null && state.roles!.length > 1)
+                  ListTile(
+                    leading: const Icon(
+                      Icons.swap_horiz,
+                      color: Colors.black87,
+                    ),
+                    title: const Text(
+                      'Cambiar de rol',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RolesPage(roles: state.roles!),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  ),
                 ListTile(
                   leading: const Icon(Icons.logout, color: Colors.black87),
                   title: const Text(

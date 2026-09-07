@@ -9,7 +9,9 @@ class FirebaseRideRequestRepositoryImpl implements RideRequestRepository {
   @override
   Future<String> createRideRequest(RideRequest rideRequest) async {
     try {
-      final docRef = await _firestore.collection(collectionName).add(rideRequest.toJson());
+      final docRef = await _firestore
+          .collection(collectionName)
+          .add(rideRequest.toJson());
       return docRef.id;
     } catch (e) {
       throw Exception('Error creating ride request: $e');
@@ -23,14 +25,18 @@ class FirebaseRideRequestRepositoryImpl implements RideRequestRepository {
         .where('status', isEqualTo: 'pending')
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return RideRequest.fromJson(doc.data(), doc.id);
-      }).toList();
-    });
+          return snapshot.docs.map((doc) {
+            return RideRequest.fromJson(doc.data(), doc.id);
+          }).toList();
+        });
   }
 
   @override
-  Future<void> updateRideRequestStatus(String requestId, String status, String driverId) async {
+  Future<void> updateRideRequestStatus(
+    String requestId,
+    String status,
+    String driverId,
+  ) async {
     try {
       await _firestore.collection(collectionName).doc(requestId).update({
         'status': status,
@@ -39,5 +45,17 @@ class FirebaseRideRequestRepositoryImpl implements RideRequestRepository {
     } catch (e) {
       throw Exception('Error updating ride request status: $e');
     }
+  }
+
+  @override
+  Stream<RideRequest?> getRideRequestStream(String requestId) {
+    return _firestore.collection(collectionName).doc(requestId).snapshots().map(
+      (snapshot) {
+        if (snapshot.exists && snapshot.data() != null) {
+          return RideRequest.fromJson(snapshot.data()!, snapshot.id);
+        }
+        return null;
+      },
+    );
   }
 }

@@ -8,6 +8,7 @@ import 'package:rapidito/src/domain/useCases/rides/RidesUseCases.dart';
 import 'package:rapidito/src/presentation/pages/driver/receiveRequest/bloc/DriverReceiveRequestBloc.dart';
 import 'package:rapidito/src/presentation/pages/driver/receiveRequest/bloc/DriverReceiveRequestEvent.dart';
 import 'package:rapidito/src/presentation/pages/driver/receiveRequest/bloc/DriverReceiveRequestState.dart';
+import 'package:rapidito/src/presentation/pages/driver/trip/DriverTripPage.dart';
 
 class DriverReceiveRequestPage extends StatefulWidget {
   final RideRequest rideRequest;
@@ -49,10 +50,13 @@ class _DriverReceiveRequestPageState extends State<DriverReceiveRequestPage> {
               previous.isAccepted != current.isAccepted,
           listener: (context, state) {
             if (state.isAccepted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('¡Viaje aceptado exitosamente!')),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DriverTripPage(rideRequest: widget.rideRequest),
+                ),
               );
-              // Todo: Navegar a la pantalla de viaje del conductor
             }
           },
           child: BlocBuilder<DriverReceiveRequestBloc, DriverReceiveRequestState>(

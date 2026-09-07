@@ -7,3 +7,5 @@ class ChangePageEvent extends ClientHomeEvent {
 }
 
 class ClientLogoutEvent extends ClientHomeEvent {}
+
+class ClientHomeInitEvent extends ClientHomeEvent {}

@@ -54,13 +54,20 @@ class RideRequest {
       driverId: json['driverId'],
       originName: json['originName'] ?? '',
       destinationName: json['destinationName'] ?? '',
-      originPosition: LatLng(json['originLat'] ?? 0.0, json['originLng'] ?? 0.0),
-      destinationPosition: LatLng(json['destinationLat'] ?? 0.0, json['destinationLng'] ?? 0.0),
+      originPosition: LatLng(
+        json['originLat'] ?? 0.0,
+        json['originLng'] ?? 0.0,
+      ),
+      destinationPosition: LatLng(
+        json['destinationLat'] ?? 0.0,
+        json['destinationLng'] ?? 0.0,
+      ),
       distanceText: json['distanceText'] ?? '',
       durationText: json['durationText'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       status: json['status'] ?? 'pending',
-      polylineCoordinates: [], // Usually we don't save full polyline in realtime DB to save space, we redraw it
+      polylineCoordinates:
+          [], // Usually we don't save full polyline in realtime DB to save space, we redraw it
     );
   }
 }

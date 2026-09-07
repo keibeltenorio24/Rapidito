@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rapidito/src/domain/models/RideRequest.dart';
+import 'package:rapidito/src/presentation/pages/client/trip/ClientTripPage.dart';
 
 class ClientSearchingDriverPage extends StatefulWidget {
   final RideRequest rideRequest;
@@ -31,36 +32,45 @@ class _ClientSearchingDriverPageState extends State<ClientSearchingDriverPage> {
         .doc(widget.rideRequestId)
         .snapshots()
         .listen((snapshot) {
-      if (snapshot.exists) {
-        final data = snapshot.data() as Map<String, dynamic>;
-        final status = data['status'];
+          if (snapshot.exists) {
+            final data = snapshot.data() as Map<String, dynamic>;
+            final status = data['status'];
 
-        if (status == 'accepted') {
-          // El conductor aceptó el viaje
-          _subscription?.cancel();
-          if (mounted) {
-            // Mostrar diálogo y luego ir a otra pantalla o volver al mapa
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => AlertDialog(
-                title: const Text('¡Viaje Aceptado!'),
-                content: const Text('Un conductor va en camino.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Cerrar dialogo
-                      Navigator.pop(context); // Volver al mapa (temporalmente hasta tener la pantalla de viaje del cliente)
-                    },
-                    child: const Text('OK'),
-                  )
-                ],
-              ),
-            );
+            if (status == 'accepted') {
+              // El conductor aceptó el viaje
+              _subscription?.cancel();
+              if (mounted) {
+                final acceptedRideRequest = RideRequest.fromJson(
+                  data,
+                  snapshot.id,
+                );
+                // Agregamos las polylines originales a este request para poder dibujarlas en el viaje
+                final rideWithPolylines = RideRequest(
+                  id: acceptedRideRequest.id,
+                  clientId: acceptedRideRequest.clientId,
+                  driverId: acceptedRideRequest.driverId,
+                  originName: acceptedRideRequest.originName,
+                  destinationName: acceptedRideRequest.destinationName,
+                  originPosition: acceptedRideRequest.originPosition,
+                  destinationPosition: acceptedRideRequest.destinationPosition,
+                  distanceText: acceptedRideRequest.distanceText,
+                  durationText: acceptedRideRequest.durationText,
+                  price: acceptedRideRequest.price,
+                  status: acceptedRideRequest.status,
+                  polylineCoordinates: widget.rideRequest.polylineCoordinates,
+                );
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ClientTripPage(rideRequest: rideWithPolylines),
+                  ),
+                );
+              }
+            }
           }
-        }
-      }
-    });
+        });
   }
 
   @override

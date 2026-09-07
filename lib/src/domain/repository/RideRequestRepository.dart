@@ -4,4 +4,5 @@ abstract class RideRequestRepository {
   Future<String> createRideRequest(RideRequest rideRequest);
   Stream<List<RideRequest>> getActiveRideRequestsStream();
   Future<void> updateRideRequestStatus(String requestId, String status, String driverId);
+  Stream<RideRequest?> getRideRequestStream(String requestId);
 }

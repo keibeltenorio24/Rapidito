@@ -6,6 +6,8 @@ import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeState
 import 'package:rapidito/src/presentation/pages/profile/info/ProfileInfoPage.dart';
 import 'package:rapidito/src/presentation/pages/driver/map/DriverMapPage.dart';
 
+import 'package:rapidito/src/presentation/pages/roles/RolesPage.dart';
+
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({super.key});
 
@@ -14,6 +16,14 @@ class DriverHomePage extends StatefulWidget {
 }
 
 class DriverHomePageState extends State<DriverHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DriverHomeBloc>().add(DriverHomeInitEvent());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +105,26 @@ class DriverHomePageState extends State<DriverHomePage> {
                     Navigator.pop(context);
                   },
                 ),
+                if (state.roles != null && state.roles!.length > 1)
+                  ListTile(
+                    leading: const Icon(
+                      Icons.swap_horiz,
+                      color: Colors.black87,
+                    ),
+                    title: const Text(
+                      'Cambiar de rol',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RolesPage(roles: state.roles!),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  ),
                 ListTile(
                   leading: const Icon(Icons.logout, color: Colors.black87),
                   title: const Text(

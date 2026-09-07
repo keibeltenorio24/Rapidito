@@ -17,3 +17,5 @@ class ChangeDriverPageEvent extends DriverHomeEvent {
 }
 
 class DriverLogoutEvent extends DriverHomeEvent {}
+
+class DriverHomeInitEvent extends DriverHomeEvent {}

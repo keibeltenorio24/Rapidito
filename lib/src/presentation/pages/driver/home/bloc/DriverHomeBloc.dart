@@ -15,5 +15,12 @@ class DriverHomeBloc extends Bloc<DriverHomeEvent, DriverHomeState> {
     on<DriverLogoutEvent>((event, emit) async {
       await authUseCases.removeUserSession.run();
     });
+
+    on<DriverHomeInitEvent>((event, emit) async {
+      final authResponse = await authUseCases.getUserSession.run();
+      if (authResponse != null && authResponse.user.roles != null) {
+        emit(state.copyWith(roles: authResponse.user.roles));
+      }
+    });
   }
 }
