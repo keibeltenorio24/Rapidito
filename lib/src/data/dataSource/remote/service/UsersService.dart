@@ -6,6 +6,7 @@ import 'package:rapidito/src/data/api/ApiConfig.dart';
 import 'package:rapidito/src/domain/models/user.dart';
 import 'package:rapidito/src/domain/utils/Resource.dart';
 import 'package:rapidito/src/data/dataSource/local/SharefPref.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UsersService {
   final SharefPref sharefPref;
@@ -40,16 +41,20 @@ class UsersService {
       };
 
       if (image != null) {
-        List<int> imageBytes = await image.readAsBytes();
-        String base64Image = base64Encode(imageBytes);
-        // Agregar prefijo data URI para que Django detecte la extensión
-        String extension = image.path.split('.').last.toLowerCase();
-        String mimeType = 'image/$extension';
-        bodyMap['image_base64'] = 'data:$mimeType;base64,$base64Image';
+        String fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${image.path.split('/').last}';
+        Reference ref = FirebaseStorage.instance.ref().child(
+          'users/$id/$fileName',
+        );
+
+        UploadTask uploadTask = ref.putFile(image);
+        TaskSnapshot snapshot = await uploadTask;
+        String downloadUrl = await snapshot.ref.getDownloadURL();
+
+        bodyMap['image_url'] = downloadUrl;
       }
 
       String body = json.encode(bodyMap);
-      // Usar POST porque Django puede rechazar PUT con body grande
       response = await http.post(url, headers: headers, body: body);
 
       print(
@@ -80,7 +85,19 @@ class UsersService {
         if (response.body.isNotEmpty) {
           try {
             final data = json.decode(response.body);
-            errorMessage = data['message'] ?? errorMessage;
+            if (data is Map) {
+              if (data.containsKey('message')) {
+                var msg = data['message'];
+                errorMessage = msg is List ? msg.join(', ') : msg.toString();
+              } else if (data.containsKey('detail')) {
+                errorMessage = data['detail'].toString();
+              } else if (data.isNotEmpty) {
+                var firstVal = data.values.first;
+                errorMessage = firstVal is List
+                    ? firstVal.join(', ')
+                    : firstVal.toString();
+              }
+            }
           } catch (e) {
             errorMessage = response.body; // en caso devuelva texto plano
           }

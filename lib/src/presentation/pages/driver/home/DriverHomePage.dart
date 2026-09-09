@@ -4,6 +4,7 @@ import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeBloc.
 import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeEvent.dart';
 import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeState.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/ProfileInfoPage.dart';
+import 'package:rapidito/src/presentation/pages/history/TripHistoryPage.dart';
 import 'package:rapidito/src/presentation/pages/driver/map/DriverMapPage.dart';
 
 import 'package:rapidito/src/presentation/pages/roles/RolesPage.dart';
@@ -34,7 +35,7 @@ class DriverHomePageState extends State<DriverHomePage> {
             index: state.pageIndex,
             children: [
               const DriverMapPage(),
-              const Center(child: Text("Historial de Viajes (Conductor)")),
+              const TripHistoryPage(role: 'DRIVER'),
               const ProfileInfoPage(),
             ],
           );
@@ -54,13 +55,45 @@ class DriverHomePageState extends State<DriverHomePage> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  child: const Text(
-                    'Menú Conductor',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Menú Conductor',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: 70,
+                        height: 70,
+                        child: ClipOval(
+                          child:
+                              (state.user?.image != null &&
+                                  state.user!.image!.isNotEmpty)
+                              ? FadeInImage.assetNetwork(
+                                  placeholder: 'assets/img/user_image.png',
+                                  image: state.user!.image!,
+                                  fit: BoxFit.cover,
+                                  fadeInDuration: const Duration(seconds: 1),
+                                  imageErrorBuilder:
+                                      (context, error, stackTrace) {
+                                        return Image.asset(
+                                          'assets/img/user_image.png',
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                )
+                              : Image.asset(
+                                  'assets/img/user_image.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 ListTile(

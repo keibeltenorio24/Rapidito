@@ -70,7 +70,9 @@ class ProfileUpdateContent extends StatelessWidget {
                             height: double.infinity,
                             child: state?.image != null
                                 ? Image.file(state!.image!, fit: BoxFit.cover)
-                                : FadeInImage.assetNetwork(
+                                : (user?.image != null &&
+                                      user!.image!.isNotEmpty)
+                                ? FadeInImage.assetNetwork(
                                     placeholder: 'assets/img/user_image.png',
                                     image: user!.image!,
                                     fit: BoxFit.cover,
@@ -82,6 +84,10 @@ class ProfileUpdateContent extends StatelessWidget {
                                             fit: BoxFit.cover,
                                           );
                                         },
+                                  )
+                                : Image.asset(
+                                    'assets/img/user_image.png',
+                                    fit: BoxFit.cover,
                                   ),
                           ),
                         ),

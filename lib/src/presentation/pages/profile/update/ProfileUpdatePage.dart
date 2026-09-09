@@ -27,7 +27,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     if (!_isInit) {
       user = ModalRoute.of(context)?.settings.arguments as User?;
       if (user != null) {
-        context.read<ProfileUpdateBloc>().add(ProfileUpdateInitEvent(user: user));
+        context.read<ProfileUpdateBloc>().add(
+          ProfileUpdateInitEvent(user: user),
+        );
       }
       _isInit = true;
     }
@@ -35,7 +37,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
-    user = ModalRoute.of(context)?.settings.arguments as User;
+    user = ModalRoute.of(context)?.settings.arguments as User?;
     return Scaffold(
       body: BlocListener<ProfileUpdateBloc, ProfileUpdateState>(
         listenWhen: (previous, current) =>
@@ -52,6 +54,10 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               fontSize: 14.0,
             );
           } else if (response is Success) {
+            // Limpiar la caché de imágenes para forzar la descarga de la nueva foto
+            PaintingBinding.instance.imageCache.clear();
+            PaintingBinding.instance.imageCache.clearLiveImages();
+
             Fluttertoast.showToast(
               msg: '¡Datos actualizados!',
               toastLength: Toast.LENGTH_LONG,

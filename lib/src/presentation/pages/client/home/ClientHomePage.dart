@@ -5,6 +5,7 @@ import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeBloc.
 import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeEvent.dart';
 import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeState.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/ProfileInfoPage.dart';
+import 'package:rapidito/src/presentation/pages/history/TripHistoryPage.dart';
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/ClientMapSeekerPage.dart';
 import 'package:rapidito/src/presentation/pages/roles/RolesPage.dart';
 
@@ -48,7 +49,7 @@ class ClientHomePageState extends State<ClientHomePage> {
               _isMapReady
                   ? ClientMapSeekerPage()
                   : const Center(child: CircularProgressIndicator()),
-              const Center(child: Text("Historial de Viajes")),
+              const TripHistoryPage(role: 'CLIENT'),
               const ProfileInfoPage(),
             ],
           );
@@ -68,13 +69,45 @@ class ClientHomePageState extends State<ClientHomePage> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  child: const Text(
-                    'Menú',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Menú',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: 70,
+                        height: 70,
+                        child: ClipOval(
+                          child:
+                              (state.user?.image != null &&
+                                  state.user!.image!.isNotEmpty)
+                              ? FadeInImage.assetNetwork(
+                                  placeholder: 'assets/img/user_image.png',
+                                  image: state.user!.image!,
+                                  fit: BoxFit.cover,
+                                  fadeInDuration: const Duration(seconds: 1),
+                                  imageErrorBuilder:
+                                      (context, error, stackTrace) {
+                                        return Image.asset(
+                                          'assets/img/user_image.png',
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                )
+                              : Image.asset(
+                                  'assets/img/user_image.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 ListTile(

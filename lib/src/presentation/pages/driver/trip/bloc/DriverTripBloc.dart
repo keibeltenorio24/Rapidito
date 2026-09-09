@@ -72,7 +72,7 @@ class DriverTripBloc extends Bloc<DriverTripEvent, DriverTripState> {
       emit(state.copyWith(isCompleting: true));
 
       final authResponse = await authUseCases.getUserSession.run();
-      final driverId = authResponse?.user.uid;
+      final driverId = authResponse?.user.id?.toString();
 
       if (driverId != null) {
         try {

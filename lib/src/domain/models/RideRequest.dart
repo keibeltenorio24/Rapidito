@@ -13,6 +13,7 @@ class RideRequest {
   final double price;
   final List<LatLng> polylineCoordinates;
   final String status; // 'pending', 'accepted', 'completed', 'cancelled'
+  final int? timestamp;
 
   RideRequest({
     this.id,
@@ -27,6 +28,7 @@ class RideRequest {
     required this.price,
     required this.polylineCoordinates,
     this.status = 'pending',
+    this.timestamp,
   });
 
   Map<String, dynamic> toJson() {
@@ -43,7 +45,7 @@ class RideRequest {
       'durationText': durationText,
       'price': price,
       'status': status,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'timestamp': timestamp ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
 
@@ -66,6 +68,7 @@ class RideRequest {
       durationText: json['durationText'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       status: json['status'] ?? 'pending',
+      timestamp: json['timestamp'],
       polylineCoordinates:
           [], // Usually we don't save full polyline in realtime DB to save space, we redraw it
     );

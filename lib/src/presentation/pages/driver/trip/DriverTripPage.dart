@@ -50,7 +50,7 @@ class _DriverTripPageState extends State<DriverTripPage> {
               );
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                'driver/home',
+                '/driver/home',
                 (route) => false,
               );
             }
@@ -116,7 +116,7 @@ class _DriverTripPageState extends State<DriverTripPage> {
                     },
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: MediaQuery.of(context).padding.bottom + 20,
                     left: 20,
                     right: 20,
                     child: SizedBox(

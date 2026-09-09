@@ -46,7 +46,7 @@ class _ClientTripPageState extends State<ClientTripPage> {
               );
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                'client/home',
+                '/client/home',
                 (route) => false,
               );
             }
@@ -112,7 +112,7 @@ class _ClientTripPageState extends State<ClientTripPage> {
                     },
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: MediaQuery.of(context).padding.bottom + 20,
                     left: 20,
                     right: 20,
                     child: Card(

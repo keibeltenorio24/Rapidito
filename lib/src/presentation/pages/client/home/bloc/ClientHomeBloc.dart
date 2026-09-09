@@ -17,8 +17,13 @@ class ClientHomeBloc extends Bloc<ClientHomeEvent, ClientHomeState> {
 
     on<ClientHomeInitEvent>((event, emit) async {
       final authResponse = await authUseCases.getUserSession.run();
-      if (authResponse != null && authResponse.user.roles != null) {
-        emit(state.copyWith(roles: authResponse.user.roles));
+      if (authResponse != null) {
+        emit(
+          state.copyWith(
+            roles: authResponse.user.roles,
+            user: authResponse.user,
+          ),
+        );
       }
     });
   }

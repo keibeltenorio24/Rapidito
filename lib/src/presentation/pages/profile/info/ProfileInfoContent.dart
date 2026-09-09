@@ -3,6 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapidito/src/domain/models/user.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/bloc/ProfileInfoBloc.dart';
 import 'package:rapidito/src/presentation/pages/profile/info/bloc/ProfileInfoEvent.dart';
+import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeBloc.dart'
+    as rapidito_client;
+import 'package:rapidito/src/presentation/pages/client/home/bloc/ClientHomeEvent.dart'
+    as rapidito_client;
+import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeBloc.dart'
+    as rapidito_driver;
+import 'package:rapidito/src/presentation/pages/driver/home/bloc/DriverHomeEvent.dart'
+    as rapidito_driver;
 
 class ProfileInfoContent extends StatelessWidget {
   final User? user;
@@ -24,6 +32,19 @@ class ProfileInfoContent extends StatelessWidget {
               );
               if (result != null) {
                 context.read<ProfileInfoBloc>().add(GetUserInfo());
+
+                // Actualizar el menú lateral (Client o Driver)
+                try {
+                  context.read<rapidito_client.ClientHomeBloc>().add(
+                    rapidito_client.ClientHomeInitEvent(),
+                  );
+                } catch (e) {}
+
+                try {
+                  context.read<rapidito_driver.DriverHomeBloc>().add(
+                    rapidito_driver.DriverHomeInitEvent(),
+                  );
+                } catch (e) {}
               }
             }),
             _actionProfile('CERRAR SESION', Icons.logout, () {}),
@@ -51,14 +72,23 @@ class ProfileInfoContent extends StatelessWidget {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: ClipOval(
-                  child: user?.image != null
+                  child: (user?.image != null && user!.image!.isNotEmpty)
                       ? FadeInImage.assetNetwork(
                           placeholder: 'assets/img/user_image.png',
                           image: user!.image!,
                           fit: BoxFit.cover,
                           fadeInDuration: Duration(seconds: 1),
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/img/user_image.png',
+                              fit: BoxFit.cover,
+                            );
+                          },
                         )
-                      : Container(),
+                      : Image.asset(
+                          'assets/img/user_image.png',
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),

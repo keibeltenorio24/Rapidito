@@ -1,19 +1,22 @@
 import 'package:rapidito/src/domain/models/Role.dart';
+import 'package:rapidito/src/domain/models/user.dart';
 import 'package:equatable/equatable.dart';
 
 class ClientHomeState extends Equatable {
   final int pageIndex;
   final List<Role>? roles;
+  final User? user;
 
-  ClientHomeState({this.pageIndex = 0, this.roles});
+  ClientHomeState({this.pageIndex = 0, this.roles, this.user});
 
-  ClientHomeState copyWith({int? pageIndex, List<Role>? roles}) {
+  ClientHomeState copyWith({int? pageIndex, List<Role>? roles, User? user}) {
     return ClientHomeState(
       pageIndex: pageIndex ?? this.pageIndex,
       roles: roles ?? this.roles,
+      user: user ?? this.user,
     );
   }
 
   @override
-  List<Object?> get props => [pageIndex, roles];
+  List<Object?> get props => [pageIndex, roles, user];
 }

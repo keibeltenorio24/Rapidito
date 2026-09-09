@@ -58,4 +58,24 @@ class FirebaseRideRequestRepositoryImpl implements RideRequestRepository {
       },
     );
   }
+
+  @override
+  Future<List<RideRequest>> getRideHistory(String userId, String role) async {
+    try {
+      final field = role == 'CLIENT' ? 'clientId' : 'driverId';
+      final querySnapshot = await _firestore
+          .collection(collectionName)
+          .where(field, isEqualTo: userId)
+          .get();
+
+      final trips = querySnapshot.docs.map((doc) {
+        return RideRequest.fromJson(doc.data(), doc.id);
+      }).toList();
+
+      trips.sort((a, b) => (b.timestamp ?? 0).compareTo(a.timestamp ?? 0));
+      return trips;
+    } catch (e) {
+      throw Exception('Error getting ride history: $e');
+    }
+  }
 }
