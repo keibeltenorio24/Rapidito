@@ -15,10 +15,6 @@ Rapidito es una aplicación para transporte de pasajeros (tipo Uber/Yango, etc.)
 - **State Management:** `flutter_bloc`
 - **Mapas:** `google_maps_flutter`, `geolocator`, `flutter_polyline_points`, `google_places_autocomplete`
 
-## Requerimientos 
-- **Flutter SDK:** versión 3.20.0 o superior (o la versión que estés usando).
-- **Dart SDK:** versión 3.0.0 o superior. 
-
 
 ## Configuración Local y Ejecución 🚀
 
