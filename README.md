@@ -1,10 +1,10 @@
-# Rapidito 🚕📱
+# Rapidito 🚕
 
-Rapidito es una aplicación para transporte de pasajeros (tipo Uber/Yango, etc.), desarrollada con Flutter para los clientes y conductores. Permite el trazado de rutas en tiempo real, cálculo de tarifas dinámicas y selección de roles dinámicos.
+Rapidito es una aplicación para transporte de pasajeros (tipo Uber/Yango, etc.), desarrollada con Flutter, donde puedes solicitar viajes y ser transportado de un punto a otro. También  permite el trazado de rutas en tiempo real, geolocalización en tiempo real, cálculo de distancias, tiempos y tarifas dinámicas.
 
 ## Características Principales
 - **Sistema Multi-rol:** Un mismo usuario puede autenticarse y alternar entre los perfiles de `Cliente` y `Conductor` usando la misma cuenta y token JWT(siempre y cuando tenga asignado ambos roles, por defecto se asigna cliente, se tiene previsto implementar que el usuario que desee trabajar como conductor debe hacer una solicitud mediante un formulario).
-- **Geolocalización y Trazado de Rutas:** Integración con la API de Google Maps para mostrar ubicaciones en tiempo real, dibujar polilíneas de ruta (origen-destino) y calcular distancia y costo de los viajes.
+- **Geolocalización y Trazado de Rutas:** Integración con la API de Google Maps para mostrar ubicaciones en tiempo real, dibujar ruta (origen-destino) con polilíneas.
 - **Arquitectura Limpia:** Estructurada usando **Clean Architecture** (Dominio, Datos, Presentación) para asegurar escalabilidad y un código mantenible.
 - **Manejo de Estado:** Utilización estricta del patrón **BLoC** (Business Logic Component) a lo largo de toda la aplicación.
 - **Firebase Storage:** Almacenamiento optimizado de recursos multimedia en la nube, especialmente para avatares y fotos de perfil, logrando persistencia total.
