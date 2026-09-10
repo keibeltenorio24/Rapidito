@@ -21,8 +21,10 @@ class ClientMapSeekerBloc
   final Geocoding geocoding = Geocoding();
   final String _googleApiKey = 'AIzaSyBHJifu14P0CTs6cflg9B6ikOLCRfxOv_k';
 
-  ClientMapSeekerBloc({required this.geolocatorUseCases, required this.ridesUseCases})
-    : super(ClientMapSeekerState()) {
+  ClientMapSeekerBloc({
+    required this.geolocatorUseCases,
+    required this.ridesUseCases,
+  }) : super(ClientMapSeekerState()) {
     on<ClientMapSeekerInitEvent>((event, emit) async {
       emit(ClientMapSeekerState(controller: Completer<GoogleMapController>()));
     });
@@ -186,7 +188,6 @@ class ClientMapSeekerBloc
 
             emit(
               state.copyWith(
-                marker: destinationMarker,
                 destinationMarker: destinationMarker,
                 destinationPosition: LatLng(lat, lng),
                 placesPredictions: [],
@@ -294,6 +295,28 @@ class ClientMapSeekerBloc
             width: 5,
           );
 
+          // Recrear los marcadores para que siempre aparezcan en los extremos de la ruta
+          BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker
+              .run('assets/img/location_blue.png');
+
+          Marker originMarker = geolocatorUseCases.getMarker.run(
+            'origin',
+            event.origin.latitude,
+            event.origin.longitude,
+            'Origen',
+            '',
+            imageMarker,
+          );
+
+          Marker destMarker = geolocatorUseCases.getMarker.run(
+            'destination',
+            event.destination.latitude,
+            event.destination.longitude,
+            'Destino',
+            '',
+            imageMarker,
+          );
+
           // Calcular precio (Ejemplo: $1.50 base + $0.50 por km)
           double distanceKm = directionData.distanceValue / 1000;
           double price = 1.50 + (0.50 * distanceKm);
@@ -301,6 +324,8 @@ class ClientMapSeekerBloc
           emit(
             state.copyWith(
               polylines: {id: polyline},
+              marker: originMarker,
+              destinationMarker: destMarker,
               distanceText: directionData.distanceText,
               durationText: directionData.durationText,
               price: double.parse(price.toStringAsFixed(2)),
@@ -347,7 +372,9 @@ class ClientMapSeekerBloc
     on<OnCreateRideRequest>((event, emit) async {
       emit(state.copyWith(isRequesting: true));
       try {
-        String requestId = await ridesUseCases.createRideRequest.run(event.rideRequest);
+        String requestId = await ridesUseCases.createRideRequest.run(
+          event.rideRequest,
+        );
         emit(state.copyWith(isRequesting: false, rideRequestId: requestId));
       } catch (e) {
         print('Error creating ride request in firebase: $e');

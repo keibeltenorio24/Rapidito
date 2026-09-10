@@ -47,7 +47,7 @@ class ProfileInfoContent extends StatelessWidget {
                 } catch (e) {}
               }
             }),
-            _actionProfile('CERRAR SESION', Icons.logout, () {}),
+            // _actionProfile('CERRAR SESION', Icons.logout, () {}),
             SizedBox(height: 200),
           ],
         ),

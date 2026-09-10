@@ -20,15 +20,14 @@ class RolesItem extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(bottom: 20, top: 15),
-            height: 100,
-            child: FadeInImage(
-              placeholder: const AssetImage('assets/img/no-image.png'),
-              image: NetworkImage(role.image),
+            height: 160,
+            child: Image.asset(
+              role.id == 'CLIENT'
+                  ? 'assets/img/role_client.png'
+                  : (role.id == 'DRIVER'
+                        ? 'assets/img/role_driver.png'
+                        : 'assets/img/no-image.png'),
               fit: BoxFit.contain,
-              fadeInDuration: const Duration(milliseconds: 50),
-              imageErrorBuilder: (context, error, stackTrace) {
-                return Image.asset('assets/img/no-image.png');
-              },
             ),
           ),
           Text(

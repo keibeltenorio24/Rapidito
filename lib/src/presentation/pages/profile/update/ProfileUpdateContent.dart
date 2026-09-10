@@ -11,6 +11,7 @@ import 'package:rapidito/src/presentation/pages/profile/update/bloc/ProfileUpdat
 import 'package:rapidito/src/presentation/pages/profile/update/bloc/ProfileUpdateState.dart';
 import 'package:rapidito/src/presentation/widgets/DefaultIconBack.dart';
 import 'package:rapidito/src/presentation/widgets/DefaultTextField.dart';
+import 'package:rapidito/src/presentation/widgets/DefaultButton.dart';
 
 class ProfileUpdateContent extends StatelessWidget {
   User? user;
@@ -28,7 +29,19 @@ class ProfileUpdateContent extends StatelessWidget {
             Column(
               children: [
                 _cardUserInfo(context),
-                _actionProfile(context, 'ACTUALIZAR DATOS', Icons.check),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: DefaultButton(
+                    text: 'ACTUALIZAR DATOS',
+                    color: Colors.cyan,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      if (state?.formKey?.currentState?.validate() ?? false) {
+                        context.read<ProfileUpdateBloc>().add(FormSubmit());
+                      }
+                    },
+                  ),
+                ),
                 SizedBox(height: 40),
               ],
             ),
@@ -168,35 +181,6 @@ class ProfileUpdateContent extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _actionProfile(BuildContext context, String option, IconData icon) {
-    return GestureDetector(
-      onTap: () {
-        if (state?.formKey?.currentState?.validate() ?? false) {
-          context.read<ProfileUpdateBloc>().add(FormSubmit());
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.only(left: 20, right: 20, top: 15),
-        child: ListTile(
-          title: Text(option, style: TextStyle(fontWeight: FontWeight.bold)),
-          leading: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.cyan, Color.fromARGB(255, 0, 150, 163)],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-              ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Icon(icon, color: Colors.white),
-          ),
-          trailing: Icon(Icons.arrow_forward_ios),
         ),
       ),
     );
