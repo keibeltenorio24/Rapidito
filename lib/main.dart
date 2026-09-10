@@ -10,8 +10,11 @@ import 'package:rapidito/src/presentation/pages/client/home/ClientHomePage.dart'
 import 'package:rapidito/src/presentation/pages/driver/home/DriverHomePage.dart';
 import 'package:rapidito/src/presentation/pages/profile/update/profileUpdatePage.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await configureDependencies();
   runApp(const MyApp());

@@ -8,6 +8,7 @@ import 'package:google_maps_flutter_platform_interface/src/types/marker.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:rapidito/src/domain/repository/GeolocatorRepository.dart';
 import 'package:rapidito/src/domain/models/DirectionData.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GeolocatorRepositoryImpl implements GeolocatorRepository {
   @override
@@ -83,7 +84,7 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
 
   @override
   Future<DirectionData> getPolyline(LatLng origin, LatLng destination) async {
-    String googleApiKey = 'AIzaSyBHJifu14P0CTs6cflg9B6ikOLCRfxOv_k';
+    String googleApiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
 
     final url = Uri.parse(
       'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$googleApiKey',

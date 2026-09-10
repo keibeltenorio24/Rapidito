@@ -13,13 +13,14 @@ import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapS
 import 'package:rapidito/src/presentation/pages/client/mapSeeker/bloc/ClientMapSeekerState.dart';
 
 import 'package:rapidito/src/domain/useCases/rides/RidesUseCases.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ClientMapSeekerBloc
     extends Bloc<ClientMapSeekerEvent, ClientMapSeekerState> {
   final GeolocatorUseCases geolocatorUseCases;
   final RidesUseCases ridesUseCases;
   final Geocoding geocoding = Geocoding();
-  final String _googleApiKey = 'AIzaSyBHJifu14P0CTs6cflg9B6ikOLCRfxOv_k';
+  final String _googleApiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
 
   ClientMapSeekerBloc({
     required this.geolocatorUseCases,
