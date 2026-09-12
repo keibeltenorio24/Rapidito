@@ -15,6 +15,7 @@ Rapidito es una aplicación para transporte de pasajeros (tipo Uber/Yango, etc.)
 - **Backend:** API REST (Django / DRF) con Autenticación JWT.
 - **State Management:** `flutter_bloc`
 - **Mapas:** `google_maps_flutter`, `geolocator`, `flutter_polyline_points`, `google_places_autocomplete`
+- **Base de datos y Multimedia:** PostgreSQL y Firebase Storage para el manejo multimedia.
 
 
 ## Configuración Local y Ejecución 🚀
