@@ -8,6 +8,7 @@ Rapidito es una aplicación para transporte de pasajeros (tipo Uber/Yango, etc.)
 - **Arquitectura Limpia:** Estructurada usando **Clean Architecture** (Dominio, Datos, Presentación) para asegurar escalabilidad y un código mantenible.
 - **Manejo de Estado:** Utilización estricta del patrón **BLoC** (Business Logic Component) a lo largo de toda la aplicación.
 - **Firebase Storage:** Almacenamiento optimizado de recursos multimedia en la nube, especialmente para avatares y fotos de perfil, logrando persistencia total.
+- **Sincronización en Tiempo Real:** Implementación de base de datos en tiempo real (Cloud Firestore) para comunicar instantáneamente los eventos entre el dispositivo del Cliente y el del Conductor.
 
 ## Stack Tecnológico 🛠️
 - **Frontend:** Flutter y Dart.

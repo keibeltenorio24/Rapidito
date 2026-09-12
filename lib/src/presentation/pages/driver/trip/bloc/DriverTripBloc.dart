@@ -50,11 +50,17 @@ class DriverTripBloc extends Bloc<DriverTripEvent, DriverTripState> {
         destinationIcon,
       );
 
+      // Obtenemos la ruta de nuevo desde la API porque no la guardamos en Firebase para ahorrar espacio
+      final directionData = await geolocatorUseCases.getPolyline.run(
+        event.rideRequest.originPosition,
+        event.rideRequest.destinationPosition,
+      );
+
       PolylineId id = const PolylineId("route");
       Polyline polyline = Polyline(
         polylineId: id,
         color: const Color(0xFF4285F4),
-        points: event.rideRequest.polylineCoordinates,
+        points: directionData.polylineCoordinates,
         width: 5,
       );
 
@@ -65,6 +71,34 @@ class DriverTripBloc extends Bloc<DriverTripEvent, DriverTripState> {
           polylines: {id: polyline},
         ),
       );
+
+      // Calcular los límites (Bounds) para alejar la cámara y que se vea toda la ruta
+      if (state.controller != null) {
+        GoogleMapController googleMapController =
+            await state.controller!.future;
+
+        double minLat = event.rideRequest.originPosition.latitude;
+        double minLng = event.rideRequest.originPosition.longitude;
+        double maxLat = event.rideRequest.originPosition.latitude;
+        double maxLng = event.rideRequest.originPosition.longitude;
+
+        for (var point in directionData.polylineCoordinates) {
+          if (point.latitude < minLat) minLat = point.latitude;
+          if (point.latitude > maxLat) maxLat = point.latitude;
+          if (point.longitude < minLng) minLng = point.longitude;
+          if (point.longitude > maxLng) maxLng = point.longitude;
+        }
+
+        LatLngBounds bounds = LatLngBounds(
+          southwest: LatLng(minLat, minLng),
+          northeast: LatLng(maxLat, maxLng),
+        );
+
+        // Animar la cámara para encajar los límites con 50 píxeles de padding
+        googleMapController.animateCamera(
+          CameraUpdate.newLatLngBounds(bounds, 50.0),
+        );
+      }
     });
 
     on<FinishTripEvent>((event, emit) async {
